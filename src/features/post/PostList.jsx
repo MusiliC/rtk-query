@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector} from "react-redux";
 import {
-  selectAllPosts,
+  selectPostIds,
   getPostsError,
   getPostsStatus,
 
@@ -10,21 +10,17 @@ import PostsExercpt from "./PostsExercpt";
 
 const PostList = () => {
 
-  const posts = useSelector(selectAllPosts);
+  // const posts = useSelector(selectAllPosts);
+  const orderedPostsIds = useSelector(selectPostIds)
   const postsStatus = useSelector(getPostsStatus);
   const error = useSelector(getPostsError);
 
-  // useEffect(() => {
-  //   if (postsStatus === "idle") {
-  //     dispatch(fetchPosts());
-  //   }
-  // }, [postsStatus, dispatch]);
 
 
 
-  const orderedPosts = posts
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date));
+  // const orderedPosts = posts
+  //   .slice()
+  //   .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
     <section className="w-full  py-8">
@@ -40,8 +36,8 @@ const PostList = () => {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3">
-            {orderedPosts.map((post) => (
-              <PostsExercpt post={post} key={post.id} />
+            {orderedPostsIds.map((postId) => (
+              <PostsExercpt postId={postId} key={postId} />
             ))}
           </div>
         )}

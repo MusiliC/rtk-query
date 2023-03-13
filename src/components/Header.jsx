@@ -17,6 +17,9 @@ const Header = () => {
             <p>
               <Link to={"/post"}>Post</Link>
             </p>
+            <p>
+              <Link to={"/user"}>Users</Link>
+            </p>
           </nav>
         </div>
       </header>

@@ -3,8 +3,12 @@ import PostAuthor from "./PostAuthor";
 import TimeAgo from "./TimeAgo";
 import ReactionButton from "./ReactionButton";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectPostById } from "./postSlice";
 
-const PostsExercpt = ({ post }) => {
+const PostsExercpt = ({ postId }) => {
+  const post = useSelector((state) => selectPostById(state, postId));
+
   return (
     <div className="border p-4 mb-2  md:w-3/4 mx-auto rounded-md ">
       <h1 className=" font-semibold">{post.title}</h1>
