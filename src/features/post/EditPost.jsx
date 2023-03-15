@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectPostById, updatePost, deletePost } from "./postSlice";
+import { selectPostById} from "./postSlice";
 import { selectAllUsers } from "../users/userSlice.js";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { useUpdatePostMutation, useDeletePostMutation } from "./postSlice";
+
 const EditPost = () => {
+  const [updatePost, { isLoading }] = useUpdatePostMutation();
+  const [deletePost] = useDeletePostMutation();
+
   const { postId } = useParams();
   const navigate = useNavigate();
 
@@ -14,11 +19,14 @@ const EditPost = () => {
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.body);
   const [userId, setUserId] = useState(post?.userId);
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  // const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   // const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
-  const canSave =
-    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+
+  const canSave = [title, content, userId].every(Boolean) && !isLoading;
+
+  // const canSave =
+  //   [title, content, userId].every(Boolean) && addRequestStatus === "idle";
 
   const users = useSelector(selectAllUsers);
 
@@ -28,29 +36,29 @@ const EditPost = () => {
   const onContentChanged = (e) => setContent(e.target.value);
   const onAuthorChanged = (e) => setUserId(Number(e.target.value));
 
-  const onSavePostClicked = () => {
+  const onSavePostClicked = async () => {
     if (canSave) {
       try {
-        setAddRequestStatus("pending");
-        dispatch(
-          updatePost({
-            id: post.id,
-            title,
-            body: content,
-            userId,
-            reactions: post.reactions,
-          })
-        ).unwrap();
+        // setAddRequestStatus("pending");
+        // dispatch(
+        //   updatePost({
+        //     id: post.id,
+        //     title,
+        //     body: content,
+        //     userId,
+        //     reactions: post.reactions,
+        //   })
+        // ).unwrap();
+
+        await updatePost({ title, body: content, userId }).unwrap();
 
         setTitle("");
         setContent("");
         setUserId("");
         navigate(`/post/${postId}`);
-      } catch (error) {
-        console.error("Failed to save the post", error);
-      } finally {
-        setAddRequestStatus("idle");
-      }
+      } catch (error) {} // } finally {
+      //   setAddRequestStatus("idle");
+      // }
     }
   };
 
@@ -62,19 +70,20 @@ const EditPost = () => {
 
   //delete
 
-  const onDeletePost = () => {
+  const onDeletePost = async () => {
     try {
-      setAddRequestStatus("pending");
-      dispatch(deletePost({ id: post.id })).unwrap();
+      // setAddRequestStatus("pending");
+      // dispatch(deletePost({ id: post.id })).unwrap();
+      await deletePost({id: post.id}).unwrap()
       setTitle("");
       setContent("");
       setUserId("");
       navigate("/");
     } catch (error) {
-      console.log(error);
-    } finally {
-      setAddRequestStatus("idle");
-    }
+      console.log(error);}
+    // } finally {
+    //   setAddRequestStatus("idle");
+    // }
   };
 
   return (

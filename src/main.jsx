@@ -5,11 +5,12 @@ import "./index.css";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { fetchUsers } from "./features/users/userSlice";
-import { fetchPosts } from "./features/post/postSlice";
+import { extendedApiSlice } from "./features/post/postSlice";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 store.dispatch(fetchUsers());
-store.dispatch(fetchPosts());
+// store.dispatch(fetchPosts());
+store.dispatch(extendedApiSlice.endpoints.getPosts.initiate());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
